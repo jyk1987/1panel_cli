@@ -1,4 +1,4 @@
-module 1panel_cli
+module github.com/jyk1987/1panel_cli
 
 go 1.24.3
 
