@@ -60,6 +60,7 @@ func main() {
 		panic(fmt.Sprintf("error: %s", r.Message))
 	}
 	fmt.Println(resp.String())
+	os.Exit(0)
 }
 
 func generateToken(apiKey string) string {
