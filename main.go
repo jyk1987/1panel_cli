@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"flag"
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 	"time"
@@ -38,7 +39,7 @@ func main() {
 	client := resty.New()
 	client.SetHeader("1Panel-Token", token)
 	client.SetHeader("1Panel-Timestamp", strconv.FormatInt(time.Now().Unix(), 10))
-
+	client.SetTimeout(10 * time.Second)
 	resp, err := client.R().SetBody(map[string]interface{}{
 		"forcePull": true,
 		"image":     image,
@@ -54,10 +55,10 @@ func main() {
 	var r Resp
 	err = sonic.Unmarshal(resp.Body(), &r)
 	if err != nil {
-		panic(err)
+		log.Fatalf("error: %s", err)
 	}
 	if r.Code != 200 {
-		panic(fmt.Sprintf("error: %s", r.Message))
+		log.Fatalf("error: %s", r.Message)
 	}
 	fmt.Println(resp.String())
 	os.Exit(0)
