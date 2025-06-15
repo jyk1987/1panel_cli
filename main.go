@@ -45,7 +45,7 @@ func main() {
 		"name":      name,
 	}).Post(url + "/api/v1/containers/upgrade")
 	if err != nil {
-		log.Panic(err)
+		log.Fatalf("error: %s", err)
 	}
 	type Resp struct {
 		Message string `json:"message"`
@@ -54,10 +54,10 @@ func main() {
 	var r Resp
 	err = sonic.Unmarshal(resp.Body(), &r)
 	if err != nil {
-		log.Panicf("error: %s", err)
+		log.Fatalf("error: %s", err)
 	}
 	if r.Code != 200 {
-		log.Panicf("error: %s", r.Message)
+		log.Fatalf("error: %s", r.Message)
 	}
 	log.Println(resp.String())
 	os.Exit(0)
