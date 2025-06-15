@@ -28,14 +28,13 @@ func main() {
 	flag.StringVar(&image, "image", "", "docker image name")
 	flag.StringVar(&name, "name", "", "docker container name")
 	flag.Parse()
-	println(apiKey, url, image, name)
+	log.Println(apiKey, url, image, name)
 	if len(apiKey) == 0 || len(url) == 0 || len(image) == 0 || len(name) == 0 {
 		flag.Usage()
 		os.Exit(1)
 	}
-
 	token := generateToken(apiKey)
-	println(token)
+	log.Println("token:", token)
 	client := resty.New()
 	client.SetHeader("1Panel-Token", token)
 	client.SetHeader("1Panel-Timestamp", strconv.FormatInt(time.Now().Unix(), 10))
@@ -46,7 +45,7 @@ func main() {
 		"name":      name,
 	}).Post(url + "/api/v1/containers/upgrade")
 	if err != nil {
-		panic(err)
+		log.Panic(err)
 	}
 	type Resp struct {
 		Message string `json:"message"`
@@ -55,12 +54,12 @@ func main() {
 	var r Resp
 	err = sonic.Unmarshal(resp.Body(), &r)
 	if err != nil {
-		log.Fatalf("error: %s", err)
+		log.Panicf("error: %s", err)
 	}
 	if r.Code != 200 {
-		log.Fatalf("error: %s", r.Message)
+		log.Panicf("error: %s", r.Message)
 	}
-	fmt.Println(resp.String())
+	log.Println(resp.String())
 	os.Exit(0)
 }
 
